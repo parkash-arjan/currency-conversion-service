@@ -13,10 +13,9 @@ import org.springframework.web.client.RestTemplate;
 
 @RestController
 public class CurrencyConversionController {
-	
-	
 	@Autowired
 	private CurrencyExchangeServiceProxy proxy;
+
 	@GetMapping("/currency-converter/from/{from}/to/{to}/quantity/{quantity}")
 	public CurrencyConversionBean convertCurrency(@PathVariable String from, @PathVariable String to, @PathVariable BigDecimal quantity) {
 		Map<String, String> uriVariable = new HashMap<>();
@@ -27,12 +26,11 @@ public class CurrencyConversionController {
 		CurrencyConversionBean currencyConversionBean = new CurrencyConversionBean(response.getId(), from, to, response.getConversionMultiple(), quantity, quantity.multiply(response.getConversionMultiple()), response.getPort());
 		return currencyConversionBean;
 	}
-	
+
 	@GetMapping("/currency-converter-feign/from/{from}/to/{to}/quantity/{quantity}")
 	public CurrencyConversionBean convertCurrencyFeign(@PathVariable String from, @PathVariable String to, @PathVariable BigDecimal quantity) {
 		CurrencyConversionBean response = proxy.retrieveExchangeValue(from, to);
 		CurrencyConversionBean currencyConversionBean = new CurrencyConversionBean(response.getId(), from, to, response.getConversionMultiple(), quantity, quantity.multiply(response.getConversionMultiple()), response.getPort());
 		return currencyConversionBean;
-	}	
-	
+	}
 }
